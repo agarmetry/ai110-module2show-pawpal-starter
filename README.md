@@ -22,6 +22,23 @@ Your final app should:
 - Display the plan clearly (and ideally explain the reasoning)
 - Include tests for the most important scheduling behaviors
 
+## Smarter Scheduling
+
+Three features were added to `pawpal_system.py` and demonstrated in `main.py` to make scheduling more useful for a real pet owner:
+
+**Recurring task auto-scheduling**
+When a `daily` or `weekly` task is marked complete, `mark_complete()` automatically appends a fresh copy to the pet's task list (`Litter box cleaning` becomes `Litter box cleaning (tomorrow)`). This means the owner never has to manually re-enter repeating tasks.
+
+**Completed task filtering**
+`build_schedule()` now skips any task where `completion_status` is `True`, so tasks already done earlier in the day don't consume time budget or clutter the plan.
+
+**Conflict detection**
+`Scheduler.detect_conflicts(tasks)` checks a list of tasks for two types of problems without crashing the program:
+- *Time-window overlap* — any two tasks whose `[start_time, start_time + duration)` intervals intersect, across any pets
+- *Same-slot conflict* — two tasks for the same pet both tagged `"morning"` or `"evening"`, which can't run simultaneously
+
+Warnings are returned as plain strings so they can be printed, logged, or surfaced in the UI without interrupting the rest of the scheduling flow.
+
 ## Getting started
 
 ### Setup
