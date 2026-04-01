@@ -39,6 +39,32 @@ When a `daily` or `weekly` task is marked complete, `mark_complete()` automatica
 
 Warnings are returned as plain strings so they can be printed, logged, or surfaced in the UI without interrupting the rest of the scheduling flow.
 
+## Testing PawPal+
+
+### Running the tests
+
+```bash
+python -m pytest
+```
+
+### What the tests cover
+
+| Area | Tests |
+|---|---|
+| **Sorting correctness** | `sort_by_time()` returns tasks in ascending duration order; `organize_tasks()` enforces the full mandatory → priority → duration sort order |
+| **Recurrence logic** | Marking a `daily` or `weekly` task complete appends exactly one new task to the pet's list with the correct label; non-recurring frequencies (`morning`, `evening`) produce no new task |
+| **Conflict detection** | Overlapping time windows are flagged; adjacent (non-overlapping) windows are not; same-pet same-slot duplicates are flagged; different-pet same-slot tasks are not |
+| **Schedule building** | Tasks at exactly the time budget are scheduled; tasks 1 minute over are skipped; zero-budget owners skip everything; empty pet lists produce an empty schedule |
+| **Edge cases** | `mark_complete()` with no associated pet does not crash; `detect_conflicts([])` returns an empty list |
+
+24 tests, all passing.
+
+### Confidence Level
+
+★★★★☆ (4/5)
+
+The core scheduling logic — sorting, greedy budget allocation, recurring task generation, and conflict detection — is fully covered and all 24 tests pass. One star is withheld because the greedy algorithm is not optimal (a mandatory task can block multiple smaller tasks that would fit), and the Streamlit UI layer in `app.py` has no test coverage. Reliability of the scheduling engine itself is high.
+
 ## Getting started
 
 ### Setup
